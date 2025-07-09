@@ -2,6 +2,7 @@ import os
 import random
 import requests
 import time
+from pathlib import Path
 
 from comics_download_script import download_comic
 
@@ -26,7 +27,7 @@ def get_random_comic(comics_amount: int) -> dict:
 
 def post_comic(token, chat_id, random_comic_comment):
     bot = telegram.Bot(token=token)
-    with open('./Files/comics.png', 'rb') as photo:
+    with open(Path('./Files/comics.png'), 'rb') as photo:
         bot.send_photo(
             chat_id=chat_id,
             photo=photo,
@@ -49,7 +50,7 @@ def main():
         random_comic_comment = random_comic['comment']
         download_comic(random_comic_img_url)
         post_comic(token, chat_id, random_comic_comment)
-        os.remove('./Files/comics.png')
+        os.remove(Path('./Files/comics.png'))
         time.sleep(post_time)
 
 
