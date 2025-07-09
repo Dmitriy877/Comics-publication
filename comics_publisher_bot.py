@@ -1,10 +1,12 @@
-from dotenv import load_dotenv
 import os
-import time
-import telegram
-from comics_download_script import download_comics
-import requests
 import random
+import requests
+import time
+
+from comics_download_script import download_comics
+
+import telegram
+from dotenv import load_dotenv
 
 
 def get_random_comics(comics_amount: int) -> dict:
