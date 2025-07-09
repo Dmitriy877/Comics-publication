@@ -3,36 +3,35 @@ import random
 import requests
 import time
 
-from comics_download_script import download_comics
+from comics_download_script import download_comic
 
 import telegram
 from dotenv import load_dotenv
 
 
-def get_random_comics(comics_amount: int) -> dict:
-    random_comics_number = random.randint(1, comics_amount)
+def get_random_comic(comics_amount: int) -> dict:
+    random_comic_number = random.randint(1, comics_amount)
 
-    comics_link = f'https://xkcd.com/{random_comics_number}/info.0.json'
+    comics_link = f'https://xkcd.com/{random_comic_number}/info.0.json'
     response = requests.get(comics_link)
     response.raise_for_status()
     comics = response.json()
 
-    random_comics = {
+    random_comic = {
         'img_url': comics['img'],
         'comment': comics['alt']
     }
-    return random_comics
+    return random_comic
 
 
-def post_comics(token, chat_id, random_comics_comment):
+def post_comic(token, chat_id, random_comic_comment):
     bot = telegram.Bot(token=token)
     with open('./Files/comics.png', 'rb') as photo:
         bot.send_photo(
             chat_id=chat_id,
             photo=photo,
-            caption=random_comics_comment
+            caption=random_comic_comment
         )
-    os.remove('./Files/comics.png')
 
 
 def main():
@@ -42,12 +41,15 @@ def main():
     post_time = int(os.environ['POST_TIME'])
     comics_amount = 3112
 
+    os.makedirs('Files', exist_ok=True)
+
     while True:
-        random_comics = get_random_comics(comics_amount)
-        random_comics_img_url = random_comics['img_url']
-        random_comics_comment = random_comics['comment']
-        download_comics(random_comics_img_url)
-        post_comics(token, chat_id, random_comics_comment)
+        random_comic = get_random_comic(comics_amount)
+        random_comic_img_url = random_comic['img_url']
+        random_comic_comment = random_comic['comment']
+        download_comic(random_comic_img_url)
+        post_comic(token, chat_id, random_comic_comment)
+        os.remove('./Files/comics.png')
         time.sleep(post_time)
 
 
