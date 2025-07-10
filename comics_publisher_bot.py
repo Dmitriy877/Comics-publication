@@ -45,13 +45,15 @@ def main():
     os.makedirs('Files', exist_ok=True)
 
     while True:
-        random_comic = get_random_comic(comics_amount)
-        random_comic_img_url = random_comic['img_url']
-        random_comic_comment = random_comic['comment']
-        download_comic(random_comic_img_url)
-        post_comic(token, chat_id, random_comic_comment)
-        os.remove(Path('.')/'Files'/'comics.png')
-        time.sleep(post_time)
+        try:
+            random_comic = get_random_comic(comics_amount)
+            random_comic_img_url = random_comic['img_url']
+            random_comic_comment = random_comic['comment']
+            download_comic(random_comic_img_url)
+            post_comic(token, chat_id, random_comic_comment)
+            time.sleep(post_time)
+        finally:
+            os.remove(Path('.')/'Files'/'comics.png')
 
 
 if __name__ == '__main__':
